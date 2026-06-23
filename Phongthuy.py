@@ -72,7 +72,7 @@ def kiem_tra_phong_thuy_chi_tiet(quai_so, vat_pham, so_do_vi_tri, so_do_huong_nh
         if tinh_chat_vi_tri == "XẤU (HUNG)" and (tinh_chat_huong_nhin == "TỐT (CÁT)" or tinh_chat_huong_nhin is None):
             return ket_qua + "🟢 **ĐÁNH GIÁ - TUYỆT VỜI:** Đúng chuẩn quy tắc **'Tọa Hung Hướng Cát'**. Bếp đặt ở cung xấu để thiêu đốt điềm rủi và mặt bếp quay về hướng tốt để đón tài lộc."
         elif tinh_chat_vi_tri == "TỐT (CÁT)" and tinh_chat_huong_nhin == "TỐT (CÁT)":
-            return ket_qua + "🟡 **ĐÁNH GIÁ - CHƯA CHUẨN:** Mặt bếp nhìn về hướng tốt nhưng vị trí đặt bếp lại đè lên cung tốt (vô tình thiêu đốt đi may mắn của cung đó). Nên dịch vị trí đặt cụm bếp sang góc khác."
+            return ket_qua + "🟡 **ĐÁNH GIÁ - CHƯA CHUẨN:** Mặt bếp nhìn về hướng tốt nhưng vị trí đặt bếp lại đè lên cung tốt (vô tinh thiêu đốt đi may mắn của cung đó). Nên dịch vị trí đặt cụm bếp sang góc khác."
         else:
             return ket_qua + "🔴 **ĐÁNH GIÁ - XẤU:** Bếp đặt sai phong thủy, quay mặt về hướng xấu, dễ làm thất thoát tài lộc hoặc ảnh hưởng sức khỏe lửa ấm gia đình."
     elif vat_pham == "nha_ve_sing":
@@ -81,25 +81,25 @@ def kiem_tra_phong_thuy_chi_tiet(quai_so, vat_pham, so_do_vi_tri, so_do_huong_nh
         else:
             return ket_qua + "🔴 **ĐÁNH GIÁ - XẤU:** Nhà vệ sinh đang đặt đè lên cung tốt của gia chủ, làm suy giảm nghiêm trọng vượng khí, may mắn và tài lộc."
 
-# --- KHỞI TẠO CƠ SỞ DỮ LIỆU BÌNH LUẬN & THÀNH VIÊN VÙNG NHỚ ---
+# --- KHỞI TẠO CƠ SỞ DỮ LIỆU BÌNH LUẬN VÀ THÀNH VIÊN VÙNG NHỚ ---
 if 'binh_luan_db' not in st.session_state:
     st.session_state['binh_luan_db'] = [
         {"user": "phongthuy_gia", "text": "Hệ thống tính toán quái số chuẩn phái Bát Trạch!"},
         {"user": "GiaChuMayMan", "text": "Đã đổi hướng đầu giường theo app và thấy ngủ ngon hơn hẳn."}
     ]
 
+# CẬP NHẬT PHIÊN BẢN 0.4.x: Sử dụng mật khẩu dạng text thô, thư viện sẽ tự mã hóa tự động
 if 'credentials' not in st.session_state:
     st.session_state['credentials'] = {
         'usernames': {
-            'admin': {'name': 'Quản trị viên', 'password': stauth.Hasher(['admin123']).generate()[0]},
-            'user1': {'name': 'Gia chủ mẫu', 'password': stauth.Hasher(['user123']).generate()[0]}
+            'admin': {'name': 'Quản trị viên', 'password': 'admin123'},
+            'user1': {'name': 'Gia chủ mẫu', 'password': 'user123'}
         }
     }
 
 # --- CẤU HÌNH GIAO DIỆN VÀ STYLE ---
 st.set_page_config(page_title="Phong Thủy Bát Trạch Cát Tường", page_icon="☯️", layout="wide")
 
-# Sửa triệt để menu cài đặt (Ép chữ đen nền trắng) và ẩn các nút Deployment
 st.markdown("""
     <style>
     header[data-testid="stHeader"] {
@@ -108,11 +108,9 @@ st.markdown("""
     header[data-testid="stHeader"] button, header[data-testid="stHeader"] a, header[data-testid="stHeader"] span {
         color: #f1f5f9 !important;
     }
-    /* ẨN TOÀN BỘ BIỂU TƯỢNG NGÔI SAO VÀ CÂY BÚT */
     button[data-testid="embed-btn"], a[href*="github.com/edit"], button[title*="Deploy"], button[title*="Edit"] {
         display: none !important;
     }
-    /* ÉP CHO MENU THIẾT LẬP LUÔN HIỂN THỊ NỀN TRẮNG - CHỮ ĐEN RÕ RÀNG */
     div[data-testid="stPopupMenuWindow"], div[role="menu"], ul[role="listbox"] {
         background-color: #ffffff !important;
         color: #111827 !important;
@@ -125,7 +123,6 @@ st.markdown("""
     div[role="menuitem"]:hover, li[role="option"]:hover {
         background-color: #f1f5f9 !important;
     }
-    /* Giao diện nền tối cho ứng dụng */
     .stApp {
         background: linear-gradient(135deg, #0b0f19 0%, #111827 50%, #1e1b4b 100%);
         color: #f1f5f9 !important;
@@ -182,7 +179,7 @@ st.sidebar.markdown("## 🧭 ĐIỀU HƯỚNG HỆ THỐNG")
 trang_hien_tai = st.sidebar.radio("Chọn trang hiển thị:", ["🔮 Kiểm tra Phong Thủy", "🔑 Đăng nhập / Đăng ký Tài khoản"])
 st.sidebar.write("---")
 
-# Cấu hình Authenticator toàn cục
+# CẬP NHẬT PHIÊN BẢN 0.4.x: Khởi tạo Authenticator đúng cấu trúc hàm mới
 authenticator = stauth.Authenticate(
     st.session_state['credentials'],
     'phong_thuy_cookie_secure',
@@ -204,15 +201,17 @@ if trang_hien_tai == "🔑 Đăng nhập / Đăng ký Tài khoản":
             st.success(f"Bạn đang đăng nhập với tư cách: **{st.session_state['name']}**")
             authenticator.logout('Đăng xuất khỏi tài khoản', 'main')
         else:
+            # CẬP NHẬT PHIÊN BẢN 0.4.x: Hàm login chỉ sử dụng tham số đặt vị trí location
             name, authentication_status, username = authenticator.login(location='main')
-            if st.session_state["authentication_status"] is False:
+            if st.session_state.get("authentication_status") is False:
                 st.error('Tài khoản hoặc mật khẩu không chính xác.')
-            elif st.session_state["authentication_status"] is None:
+            elif st.session_state.get("authentication_status") is None:
                 st.info('Vui lòng điền thông tin để đăng nhập.')
                 
     with tab_register:
         try:
-            email_reg, username_reg, name_reg = authenticator.register_user(location='main', pre_enter=False)
+            # CẬP NHẬT PHIÊN BẢN 0.4.x: Hàm đăng ký thành viên mới
+            email_reg, username_reg, name_reg = authenticator.register_user(location='main')
             if username_reg:
                 st.success('🎉 Đăng ký thành công! Bạn có thể chuyển sang tab Đăng nhập để sử dụng.')
         except Exception as e:
@@ -222,7 +221,6 @@ if trang_hien_tai == "🔑 Đăng nhập / Đăng ký Tài khoản":
 # PHÂN HỆ 2: TRANG CHÍNH KIỂM TRA PHONG THỦY
 # =======================================================
 else:
-    # HIỂN THỊ TRẠNG THÁI ĐĂNG NHẬP NHỎ Ở SIDEBAR ĐỂ GIA CHỦ DỄ THEO DÕI
     if st.session_state.get("authentication_status"):
         st.sidebar.markdown(f"🟢 Tài khoản: **{st.session_state['name']}**")
     else:
@@ -325,12 +323,10 @@ else:
         with tabs[tab_index]:
             st.markdown("### 💬 Ý Kiến & Bình Luận Từ Cộng Đồng")
             
-            # Hiển thị danh sách bình luận hiện tại công khai
             for bl in st.session_state['binh_luan_db']:
                 st.markdown(f"👤 **{bl['user']}**: {bl['text']}")
             st.write("---")
             
-            # Kiểm tra phân quyền gửi bình luận
             if st.session_state.get("authentication_status"):
                 with st.form("gui_binh_luan_form", clear_on_submit=True):
                     text_input = st.text_area("Để lại bình luận của bạn:")
