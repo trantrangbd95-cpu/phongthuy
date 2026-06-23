@@ -2,10 +2,35 @@ import streamlit as st
 import streamlit_authenticator as stauth
 
 # --- 1. CẤU HÌNH HỆ THỐNG ---
-hashed_password = '$2b$12$K9vQZ5gXG76ZzZg/u7H.uO8L6V3R18Xw8JpQ8H2/8Hh3FhR5vX8Ju' 
-config = {
-    'credentials': {'usernames': {'admin': {'name': 'Quản trị viên', 'password': hashed_password}}},
-    'cookie': {'name': 'phongthuy_cookie', 'key': 'secret_key', 'expiry_days': 30}
+# =======================================================
+# PHÂN HỆ 1: TRANG ĐĂNG NHẬP / ĐĂNG KÝ
+# =======================================================
+if trang_hien_tai == "🔑 Đăng nhập / Đăng ký Tài khoản":
+    st.title("🔑 Trung Tâm Tài Khoản Thành Viên")
+    st.write("Đăng nhập để nhận quyền thảo luận và gửi bình luận phong thủy trên hệ thống.")
+    
+    tab_login, tab_register = st.tabs(["🔒 ĐĂNG NHẬP HỆ THỐNG", "📝 TẠO TÀI KHOẢN MỚI"])
+    
+    with tab_login:
+        if st.session_state.get("authentication_status"):
+            st.success(f"Bạn đang đăng nhập với tư cách: **{st.session_state['name']}**")
+            authenticator.logout('Đăng xuất khỏi tài khoản', 'main')
+        else:
+            # CẬP NHẬT PHIÊN BẢN 0.4.x: Hàm login chỉ sử dụng tham số đặt vị trí location
+            name, authentication_status, username = authenticator.login(location='main')
+            if st.session_state.get("authentication_status") is False:
+                st.error('Tài khoản hoặc mật khẩu không chính xác.')
+            elif st.session_state.get("authentication_status") is None:
+                st.info('Vui lòng điền thông tin để đăng nhập.')
+                
+    with tab_register:
+        try:
+            # CẬP NHẬT PHIÊN BẢN 0.4.x: Hàm đăng ký thành viên mới
+            email_reg, username_reg, name_reg = authenticator.register_user(location='main')
+            if username_reg:
+                st.success('🎉 Đăng ký thành công! Bạn có thể chuyển sang tab Đăng nhập để sử dụng.')
+        except Exception as e:
+            st.error(f"Không thể đăng ký: {e}")
 }
 authenticator = stauth.Authenticate(config['credentials'], config['cookie']['name'], config['cookie']['key'], config['cookie']['expiry_days'])
 
@@ -142,14 +167,33 @@ def kiem_tra_phong_thuy_chi_tiet(quai_so, vat_pham, so_do_vi_tri, so_do_huong_nh
         else:
             return ket_qua + "🔴 **ĐÁNH GIÁ - XẤU:** Nhà vệ sinh đang đặt đè lên cung tốt của gia chủ, làm suy giảm nghiêm trọng vượng khí."
 
-if st.button("Kết quả phong thủy"):
+if st.button("Luận giải phong thủy"):
     st.success("Dữ liệu phong thủy đã được ghi nhận cho tất cả các khu vực.")
 
-st.subheader("💬 Bình luận cộng đồng")
-if 'bl' not in st.session_state: st.session_state['bl'] = []
-for item in st.session_state['bl']: st.write(f"- {item}")
-text_bl = st.text_input("Ý kiến của bạn:")
-if st.button("Gửi bình luận"):
-    if text_bl:
-        st.session_state['bl'].append(text_bl)
-        st.rerun()
+# PHẦN KHU VỰC THẢO LUẬN & BÌNH LUẬN TẠI TAB CUỐI
+        with tabs[tab_index]:
+            st.markdown("### 💬 Ý Kiến & Bình Luận Từ Cộng Đồng")
+            
+            for bl in st.session_state['binh_luan_db']:
+                st.markdown(f"👤 **{bl['user']}**: {bl['text']}")
+            st.write("---")
+            
+            if st.session_state.get("authentication_status"):
+                with st.form("gui_binh_luan_form", clear_on_submit=True):
+                    text_input = st.text_area("Để lại bình luận của bạn:")
+                    nut_gui = st.form_submit_button("Gửi Ý Kiến")
+                    if nut_gui and text_input.strip() != "":
+                        st.session_state['binh_luan_db'].append({
+                            "user": st.session_state['username'],
+                            "text": text_input
+                        })
+                        st.rerun()
+            else:
+                st.warning("🔒 Chức năng gửi bình luận chỉ dành cho thành viên. Bạn vui lòng chuyển qua mục '🔑 Đăng nhập / Đăng ký Tài khoản' tại thanh điều hướng bên trái để đăng nhập.")
+
+        # Nút chia sẻ Facebook nằm cuối trang kết quả
+        st.write("---")
+        app_url = "https://kiemtraphongthuy.streamlit.app"
+        encoded_url = urllib.parse.quote(app_url)
+        fb_share_link = f"https://www.facebook.com/sharer/sharer.php?u={encoded_url}"
+        st.markdown(f'<a href="{fb_share_link}" target="_blank" class="fb-share-btn">🔵 CHIA SẺ KẾT QUẢ TRÊN FACEBOOK</a>', unsafe_allow_html=True)
