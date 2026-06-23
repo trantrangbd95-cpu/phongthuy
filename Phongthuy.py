@@ -85,7 +85,7 @@ def kiem_tra_phong_thuy_chi_tiet(quai_so, vat_pham, so_do_vi_tri, so_do_huong_nh
             return ket_qua + "🔴 **ĐÁNH GIÁ - XẤU:** Nhà vệ sinh đang đặt đè lên cung tốt của gia chủ, làm suy giảm nghiêm trọng vượng khí, may mắn và tài lộc."
 
 # --- THIẾT KẾ GIAO DIỆN WEBSITE & MÀU SẮC GALAXY TỬ VI ---
-st.set_page_config(page_title="Phong Thủy Bát Trạch Cát Tường", page_icon="🌌", layout="wide")
+st.set_page_config(page_title="Phong Thủy Bát Trạch Cát Tường", page_icon="☯️", layout="wide")
 
 # Sửa triệt để lỗi màu chữ bị tối đen chìm vào nền sâu thẳm
 st.markdown("""
@@ -144,7 +144,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.title("🌌 Hệ Thống Phong Thủy Bát Trạch")
+st.title("☯️ Hệ Thống Phong Thủy Bát Trạch")
 st.write("---")
 
 # THANH BÊN: THÔNG TIN GIA CHỦ
@@ -205,7 +205,7 @@ with col2:
 st.write("---")
 
 # PHẦN HIỂN THỊ KẾT QUẢ THÔNG MINH
-if st.button("🔮 Bắt đầu kiểm tra phong thủy", use_container_width=True):
+if st.button("🔮 BẮT ĐẦU KIỂM TRA PHONG THỦY", use_container_width=True):
     # Kiểm tra xem người dùng có điền ít nhất 1 mục hay không
     if t_giuong is None and t_bep is None and t_ban is None and t_wc is None:
         st.warning("🪐 Vui lòng điền số độ của ít nhất một vị trí bạn muốn kiểm tra ở phía trên.")
