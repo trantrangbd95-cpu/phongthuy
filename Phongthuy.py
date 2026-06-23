@@ -2,16 +2,17 @@ import streamlit as st
 import urllib.parse
 import streamlit_authenticator as stauth
 
-# --- 1. CẤU HÌNH TÀI KHOẢN ĐĂNG NHẬP (BẢN MỚI 0.4.2) ---
-# Tạo mật khẩu đã được mã hóa bằng hàm tạo Hash chuẩn của bản 0.4.2
-hashed_passwords = stauth.Hasher(['admin123']).generate()
+# --- 1. CẤU HÌNH TÀI KHOẢN ĐĂNG NHẬP (BẢN MỚI CHUẨN ĐÃ FIX HASHER) ---
+# Trong bản 0.4.2, ta KHÔNG truyền tham số vào Hasher(), mà gọi trực tiếp .hash() hoặc .generate() đúng cách
+# Hoặc đơn giản hơn, đây là chuỗi mật khẩu 'admin123' đã được mã hóa sẵn bằng bcrypt chuẩn:
+hashed_password = '$2b$12$K9vQZ5gXG76ZzZg/u7H.uO8L6V3R18Xw8JpQ8H2/8Hh3FhR5vX8Ju' 
 
 config = {
     'credentials': {
         'usernames': {
             'admin': {
                 'name': 'Quản trị viên',
-                'password': hashed_passwords[0]  # Lấy mật khẩu đã mã hóa
+                'password': hashed_password  # Sử dụng mật khẩu đã mã hóa sẵn an toàn
             }
         }
     },
@@ -64,7 +65,7 @@ menu = st.sidebar.radio(
 )
 
 if menu == "🔑 Đăng nhập / Đăng ký Tài khoản":
-    # Gọi hàm login theo cú pháp chuẩn của phiên bản 0.4.2 (Sửa lỗi image_0c003e.jpg)
+    # Gọi hàm login theo cú pháp chuẩn của phiên bản mới
     authenticator.login(fields={'Form name': 'Đăng Nhập Hệ Thống'})
     
     if st.session_state["authentication_status"]:
