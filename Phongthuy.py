@@ -28,11 +28,26 @@ st.title("🔮 Tra Cứu Quái Số & Cung Mệnh Phong Thủy")
 
 st.info("""
 🧭 **HƯỚNG DẪN SỬ DỤNG LA BÀN ĐỂ ĐO SỐ ĐỘ CHÍNH XÁC:**
-1. **Đo Cung vị trí:** Đứng ở **Tâm nhà**, hướng đầu điện thoại về vị trí đặt Giường, Bếp, Bàn làm việc, WC.
-2. **Đo Hướng nhìn:** 
-    * *Giường ngủ:* Mắt nhìn về phía đuôi giường.
-    * *Bàn làm việc:* Mắt nhìn thẳng ra trước mặt bàn.
-    * *Bếp nấu:* Mắt nhìn vào mặt bếp (lưng người nấu quay về đâu chính là Hướng Bếp).
+**Hướng dẫn chi tiết cho từng vị trí:
+**🛏️ Giường ngủ:
+
+**Cách đo: Đứng (hoặc nằm) ở giữa giường.
+**Thao tác: Hướng Đầu điện thoại về phía Đuôi giường (phía chân người nằm). Số độ đó chính là hướng giường của bạn.
+
+**🍳 Bếp nấu:
+
+**Cách đo: Đứng ở vị trí người nấu đứng thao tác hàng ngày.
+**Thao tác: Hướng Đầu điện thoại thẳng vào Mặt bếp/Nồi nấu (hướng mắt bạn đang nhìn). Lưng bạn đang quay về phía nào thì đó chính là phương vị "Tọa" của bếp.
+
+**💼 Bàn làm việc:
+
+**Cách đo: Ngồi vào ghế làm việc.
+**Thao tác: Hướng Đầu điện thoại thẳng ra phía Trước mặt bàn (hướng nhìn của bạn).
+
+**🚽 Nhà vệ sinh (WC):
+
+**Cách đo: Đứng ngay tại cửa phòng vệ sinh.
+**Thao tác: Nhìn thẳng vào trong phòng, hướng Đầu điện thoại vào phía trong phòng vệ sinh. Số độ đó là hướng cửa của nhà vệ sinh.
 """)
 
 st.subheader("📅 Thông tin gia chủ")
@@ -63,8 +78,9 @@ with col2:
     
     st.write("#### 🚽 Nhà vệ sinh (WC)")
     t_wc = st.number_input("Tọa WC (°):", 0, 360, 0, key="twc")
+    h_wc = st.number_input("Hướng WC (°):", 0, 360, 0, key="hwc")
 
-if st.button("Xác nhận thông tin"):
+if st.button("Luận giải phong thủy"):
     st.success("Dữ liệu phong thủy đã được ghi nhận cho tất cả các khu vực.")
 
 st.subheader("💬 Bình luận cộng đồng")
