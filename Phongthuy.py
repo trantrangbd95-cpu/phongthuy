@@ -1,4 +1,5 @@
 import streamlit as st
+import urllib.parse
 
 # --- BỘ NÃO LOGIC PHONG THỦY ---
 def tinh_quai_so(nam_sinh, gioi_tinh):
@@ -87,9 +88,17 @@ def kiem_tra_phong_thuy_chi_tiet(quai_so, vat_pham, so_do_vi_tri, so_do_huong_nh
 # --- THIẾT KẾ GIAO DIỆN WEBSITE & MÀU SẮC GALAXY TỬ VI ---
 st.set_page_config(page_title="Phong Thủy Bát Trạch Cát Tường", page_icon="☯️", layout="wide")
 
-# Sửa triệt để lỗi màu chữ bị tối đen chìm vào nền sâu thẳm
+# Sửa triệt để lỗi màu chữ đen, dải trắng trên cùng header và định dạng lại toàn trang
 st.markdown("""
     <style>
+    /* Đổi màu dải header trên cùng từ trắng về cùng màu tối với trang bên dưới */
+    header[data-testid="stHeader"] {
+        background-color: #0b0f19 !important;
+    }
+    /* Bắt buộc nút Share và các biểu tượng góc phải có màu trắng sáng rõ */
+    header[data-testid="stHeader"] button, header[data-testid="stHeader"] a, header[data-testid="stHeader"] span {
+        color: #f1f5f9 !important;
+    }
     /* Nền ứng dụng màu vũ trụ sâu thẳm */
     .stApp {
         background: linear-gradient(135deg, #0b0f19 0%, #111827 50%, #1e1b4b 100%);
@@ -140,6 +149,21 @@ st.markdown("""
         border: 1px solid #a855f7 !important;
         color: #f1f5f9 !important;
         border-radius: 10px;
+    }
+    /* CSS cho nút chia sẻ Facebook */
+    .fb-share-btn {
+        background-color: #1877f2;
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+        margin-top: 15px;
+        box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);
+    }
+    .fb-share-btn:hover {
+        background-color: #166fe5;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -245,3 +269,11 @@ if st.button("🔮 BẮT ĐẦU KIỂM TRA PHONG THỦY", use_container_width=Tr
             with tabs[tab_index]:
                 st.markdown("### 🚽 Phân Tích Cung Vị Nhà Vệ Sinh")
                 st.info(kiem_tra_phong_thuy_chi_tiet(q_so, "nha_ve_sing", t_wc))
+
+        # Thêm nút Chia sẻ kết quả lên Facebook ở cuối phần kết quả
+        st.write("---")
+        app_url = "https://kiemtraphongthuy.streamlit.app"
+        encoded_url = urllib.parse.quote(app_url)
+        fb_share_link = f"https://www.facebook.com/sharer/sharer.php?u={encoded_url}"
+        
+        st.markdown(f'<a href="{fb_share_link}" target="_blank" class="fb-share-btn">🔵 CHIA SẺ KẾT QUẢ TRÊN FACEBOOK</a>', unsafe_allow_html=True)
