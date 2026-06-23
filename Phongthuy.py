@@ -30,6 +30,9 @@ st.info("""
 🧭 **HƯỚNG DẪN SỬ DỤNG LA BÀN ĐỂ ĐO SỐ ĐỘ CHÍNH XÁC:**
 1. **Đo Cung vị trí:** Đứng ở **Tâm nhà**, hướng đầu điện thoại về vị trí đặt Giường, Bếp, Bàn làm việc, WC.
 2. **Đo Hướng nhìn:** 
+    * *Nhà vệ sinh (WC):* Đo "Tọa" (Vị trí đặt WC): Bạn nên đứng ở Tâm nhà (trung tâm của ngôi nhà), hướng đầu điện thoại về phía cửa nhà vệ sinh hoặc tâm của phòng vệ sinh để xác định nó nằm ở phương vị nào.
+**-Đo "Hướng" (Hướng cửa WC): Nếu bạn muốn biết hướng khí của WC (thường tính theo hướng cửa hoặc hướng bồn cầu), hãy đứng ngay tại cửa nhà vệ sinh.
+**-Hướng đầu điện thoại (loa nghe) thẳng về phía cửa WC hoặc bồn cầu. Số độ hiển thị trên màn hình chính là Hướng WC của bạn.
     * *Giường ngủ:* Cách đo bằng điện thoại:
 **-Bạn đứng ở chính giữa giường, đặt điện thoại nằm phẳng trên mặt giường.**
 **-Hướng Đầu điện thoại (loa nghe) về phía Đuôi giường (phía chân người nằm).**
@@ -71,6 +74,7 @@ with col2:
     
     st.write("#### 🚽 Nhà vệ sinh (WC)")
     t_wc = st.number_input("Tọa WC (°):", 0, 360, 0, key="twc")
+    h_wc = st.number_input("Hướng WC (°):", 0, 360, 0, key="hwc")
 
 if st.button("Xác nhận thông tin"):
     st.success("Dữ liệu phong thủy đã được ghi nhận cho tất cả các khu vực.")
