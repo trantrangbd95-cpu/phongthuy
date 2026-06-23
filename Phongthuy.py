@@ -3,7 +3,6 @@ import urllib.parse
 import streamlit_authenticator as stauth
 
 # --- 1. CẤU HÌNH TÀI KHOẢN ĐĂNG NHẬP (ĐÃ FIX LỖI HASHER & LOGIN) ---
-# Sử dụng chuỗi mật khẩu 'admin123' đã mã hóa sẵn để tránh lỗi Hasher.__init__()
 hashed_password = '$2b$12$K9vQZ5gXG76ZzZg/u7H.uO8L6V3R18Xw8JpQ8H2/8Hh3FhR5vX8Ju' 
 
 config = {
@@ -30,7 +29,7 @@ authenticator = stauth.Authenticate(
     config['cookie']['expiry_days']
 )
 
-# --- 2. BỘ NÃO LOGIC LUẬN GIẢI PHONG THỦY ĐẦY ĐỦ CỦA BẠN ---
+# --- 2. BỘ NÃO LOGIC LUẬN GIẢI PHONG THỦY ĐẦY ĐỦ ---
 def tinh_quai_so(nam_sinh, gioi_tinh):
     tong = sum(int(chuso) for chuso in str(nam_sinh))
     while tong > 9:
@@ -118,7 +117,7 @@ if 'binh_luan_db' not in st.session_state:
         {"user": "GiaChuMayMan", "text": "Đã đổi hướng đầu giường theo app và thấy ngủ ngon hơn hẳn."}
     ]
 
-# --- 4. GIAO DIỆN STREAMLIT (GIỮ NGUYÊN NỘI DUNG GỐC) ---
+# --- 4. GIAO DIỆN STREAMLIT ---
 st.set_page_config(page_title="Phong Thủy Bát Trạch", page_icon="🔮", layout="wide")
 
 # Thanh điều hướng Sidebar
@@ -133,8 +132,6 @@ menu = st.sidebar.radio(
 # ==========================================
 if menu == "🔑 Đăng nhập / Đăng ký Tài khoản":
     st.title("🔑 Đăng Nhập Hệ Thống")
-    
-    # Gọi hàm login chuẩn cấu pháp bản mới (Sửa lỗi image_0c003e.jpg)
     authenticator.login(fields={'Form name': 'Đăng Nhập Quản Trị'})
     
     if st.session_state.get("authentication_status"):
@@ -150,12 +147,21 @@ if menu == "🔑 Đăng nhập / Đăng ký Tài khoản":
 # ==========================================
 elif menu == "🔮 Kiểm tra Phong Thủy":
     st.title("🔮 Tra Cứu Quái Số & Cung Mệnh Phong Thủy")
-    st.write("Nhập năm sinh và số đo vị trí bên dưới để nhận luận giải chi tiết cát hung.")
+    
+    # --- BỔ SUNG: PHẦN HƯỚNG DẪN SỬ DỤNG LA BÀN ĐO HƯỚNG CHUẨN XÁC ---
+    st.info("""
+    🧭 **HƯỚNG DẪN SỬ DỤNG LA BÀN ĐỂ ĐO SỐ ĐỘ CHÍNH XÁC:**
+    1. **Đo Cung vị trí (Tọa độ đặt vật phẩm):** Bạn đứng ở chính giữa **Tâm nhà / Tâm phòng**, mở ứng dụng la bàn trên điện thoại, hướng đầu điện thoại thẳng về vị trí đang đặt (hoặc dự định đặt) Giường, Bếp, Bàn làm việc, WC để xem số độ hiển thị.
+    2. **Đo Hướng nhìn (Hướng đầu giường / Hướng nhìn):**
+       * *Giường ngủ:* Nằm trên giường, hướng mắt nhìn về phía đuôi giường (hoặc đầu giường hướng đi đâu đo hướng đó).
+       * *Bàn làm việc:* Ngồi vào ghế làm việc, hướng mắt nhìn thẳng ra phía trước bàn.
+       * *Bếp nấu:* Đứng ở vị trí nấu, hướng mặt nhìn thẳng vào bếp nấu (hướng lưng người nấu quay về đâu chính là Hướng Bếp).
+    """)
     
     # Nhập thông tin gia chủ cơ bản
     col_inf1, col_inf2 = st.columns(2)
     with col_inf1:
-        nam_sinh = st.number_input("Năm sinh dương lịch (Ví dụ: 1995):", min_value=1900, max_value=2026, value=1995, step=1)
+        nam_sinh = st.number_input("Nhăm sinh dương lịch (Ví dụ: 1995):", min_value=1900, max_value=2026, value=1995, step=1)
     with col_inf2:
         gioi_tinh = st.selectbox("Giới tính khai sinh:", ["Nam", "Nữ"])
         
@@ -190,7 +196,7 @@ elif menu == "🔮 Kiểm tra Phong Thủy":
         st.balloons()
         st.header("📋 KẾT QUẢ ĐÁNH GIÁ ĐỊA LÝ")
         
-        # Tạo hệ thống Tabs hiển thị kết quả chi tiết từng phần
+        # Hệ thống Tabs
         tab1, tab2, tab3, tab4 = st.tabs(["🛏️ Giường Ngủ", "💼 Bàn Làm Việc", "🍳 Bếp Nấu", "🚽 Nhà Vệ Sinh"])
         
         with tab1:
