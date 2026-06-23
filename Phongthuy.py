@@ -76,7 +76,73 @@ with col2:
     t_wc = st.number_input("Tọa WC (°):", 0, 360, 0, key="twc")
     h_wc = st.number_input("Hướng WC (°):", 0, 360, 0, key="hwc")
 
-if st.button("Xác nhận thông tin"):
+def lay_ten_quai_menh(quai_so):
+    mapping = {
+        1: "Khảm (Đông Tứ Mệnh)", 2: "Khôn (Tây Tứ Mệnh)", 3: "Chấn (Đông Tứ Mệnh)", 
+        4: "Tốn (Đông Tứ Mệnh)", 6: "Càn (Tây Tứ Mệnh)", 7: "Đoài (Tây Tứ Mệnh)", 
+        8: "Cấn (Tây Tứ Mệnh)", 9: "Ly (Đông Tứ Mệnh)"
+    }
+    return mapping.get(quai_so, "Không rõ")
+
+def lay_huong_tu_so_do(degrees):
+    if degrees is None: return "Chưa nhập"
+    degrees = degrees % 360
+    if (337.5 <= degrees <= 360) or (0 <= degrees < 22.5): return "Bắc"
+    elif 22.5 <= degrees < 67.5: return "Đông Bắc"
+    elif 67.5 <= degrees < 112.5: return "Đông"
+    elif 112.5 <= degrees < 157.5: return "Đông Nam"
+    elif 157.5 <= degrees < 202.5: return "Nam"
+    elif 202.5 <= degrees < 247.5: return "Tây Nam"
+    elif 247.5 <= degrees < 292.5: return "Tây"
+    elif 292.5 <= degrees < 337.5: return "Tây Bắc"
+
+def kiem_tra_tinh_chat_huong(quai_so, huong):
+    dong_tu_menh = [1, 3, 4, 9]
+    huong_dong_tu = ["Bắc", "Nam", "Đông", "Đông Nam"]
+    return "TỐT (CÁT)" if (quai_so in dong_tu_menh) == (huong in huong_dong_tu) else "XẤU (HUNG)"
+
+def kiem_tra_phong_thuy_chi_tiet(quai_so, vat_pham, so_do_vi_tri, so_do_huong_nhin=None):
+    if so_do_vi_tri is None:
+        return None
+    huong_vi_tri = lay_huong_tu_so_do(so_do_vi_tri)
+    tinh_chat_vi_tri = kiem_tra_tinh_chat_huong(quai_so, huong_vi_tri)
+    huong_nhin = lay_huong_tu_so_do(so_do_huong_nhin) if so_do_huong_nhin is not None else None
+    tinh_chat_huong_nhin = kiem_tra_tinh_chat_huong(quai_so, huong_nhin) if huong_nhin is not None else None
+    
+    ket_qua = f"📍 **Vị trí đặt (Tọa):** phương **{huong_vi_tri}** ({so_do_vi_tri}°) $\rightarrow$ Thuộc vùng **{tinh_chat_vi_tri}** \n"
+    if huong_nhin:
+        ket_qua += f"👀 **Hướng nhìn (Hướng):** quay về **{huong_nhin}** ({so_do_huong_nhin}°) $\rightarrow$ Thuộc vùng **{tinh_chat_huong_nhin}** \n\n"
+    else:
+        ket_qua += "\n"
+
+    if vat_pham == "giuong_ngu":
+        if tinh_chat_vi_tri == "TỐT (CÁT)" and (tinh_chat_huong_nhin == "TỐT (CÁT)" or tinh_chat_huong_nhin is None):
+            return ket_qua + "🟢 **ĐÁNH GIÁ - RẤT TỐT:** Giường nằm ở cung tốt và đầu giường nhìn về hướng tốt. Giúp ngủ ngon, phục hồi sức khỏe, gia tăng vượng khí."
+        elif tinh_chat_vi_tri == "TỐT (CÁT)" or tinh_chat_huong_nhin == "TỐT (CÁT)":
+            return ket_qua + "🟡 **ĐÁNH GIÁ - TẠM ĐƯỢC:** Đạt được Tọa tốt hoặc Hướng tốt. Có thể tối ưu thêm bằng cách dịch chuyển nhẹ hoặc xoay lại hướng đầu giường."
+        else:
+            return ket_qua + "🔴 **ĐÁNH GIÁ - XẤU:** Cả vị trí đặt và hướng đầu giường đều nằm vào cung xấu. Dễ gây mất ngủ, mệt mỏi, tinh thần bất an."
+    elif vat_pham == "ban_lam_viec":
+        if tinh_chat_vi_tri == "TỐT (CÁT)" and (tinh_chat_huong_nhin == "TỐT (CÁT)" or tinh_chat_huong_nhin is None):
+            return ket_qua + "🟢 **ĐÁNH GIÁ - RẤT TỐT:** Vị trí ngồi vững chãi ở cung tốt, mắt nhìn về hướng cát lành. Giúp tinh thần minh mẫn, công việc hanh thông, dễ thăng tiến."
+        elif tinh_chat_huong_nhin == "TỐT (CÁT)":
+            return ket_qua + "🟡 **ĐÁNH GIÁ - ỔN:** Hướng nhìn đón được cát khí tốt, dù vị trí đặt bàn chưa nằm ở cung tối ưu."
+        else:
+            return ket_qua + "🔴 **ĐÁNH GIÁ - XẤU:** Hướng ngồi nhìn thẳng vào vùng năng lượng xấu. Dễ gặp áp lực, khó tập trung, công việc trì trệ."
+    elif vat_pham == "bep":
+        if tinh_chat_vi_tri == "XẤU (HUNG)" and (tinh_chat_huong_nhin == "TỐT (CÁT)" or tinh_chat_huong_nhin is None):
+            return ket_qua + "🟢 **ĐÁNH GIÁ - TUYỆT VỜI:** Đúng chuẩn quy tắc **'Tọa Hung Hướng Cát'**. Bếp đặt ở cung xấu để thiêu đốt điềm rủi và mặt bếp quay về hướng tốt để đón tài lộc."
+        elif tinh_chat_vi_tri == "TỐT (CÁT)" and tinh_chat_huong_nhin == "TỐT (CÁT)":
+            return ket_qua + "🟡 **ĐÁNH GIÁ - CHƯA CHUẨN:** Mặt bếp nhìn về hướng tốt nhưng vị trí đặt bếp lại đè lên cung tốt. Nên dịch vị trí đặt cụm bếp sang góc khác."
+        else:
+            return ket_qua + "🔴 **ĐÁNH GIÁ - XẤU:** Bếp đặt sai phong thủy, quay mặt về hướng xấu, dễ làm thất thoát tài lộc hoặc ảnh hưởng sức khỏe."
+    elif vat_pham == "nha_ve_sing":
+        if tinh_chat_vi_tri == "XẤU (HUNG)":
+            return ket_qua + "🟢 **ĐÁNH GIÁ - RẤT TỐT:** Đúng chuẩn phong thủy **'Tọa Hung'**. Nhà vệ sinh đặt tại cung xấu giúp trấn áp, xả trôi các năng lượng tiêu cực."
+        else:
+            return ket_qua + "🔴 **ĐÁNH GIÁ - XẤU:** Nhà vệ sinh đang đặt đè lên cung tốt của gia chủ, làm suy giảm nghiêm trọng vượng khí."
+
+if st.button("Kết quả phong thủy"):
     st.success("Dữ liệu phong thủy đã được ghi nhận cho tất cả các khu vực.")
 
 st.subheader("💬 Bình luận cộng đồng")
