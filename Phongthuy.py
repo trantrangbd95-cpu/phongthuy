@@ -87,32 +87,36 @@ def kiem_tra_phong_thuy_chi_tiet(quai_so, vat_pham, so_do_vi_tri, so_do_huong_nh
 # --- THIẾT KẾ GIAO DIỆN WEBSITE & MÀU SẮC GALAXY TỬ VI ---
 st.set_page_config(page_title="Phong Thủy Bát Trạch Cát Tường", page_icon="🌌", layout="wide")
 
-# Inject CSS Custom màu sắc bầu trời sao, dải thiên hà huyền bí
+# Inject CSS sửa triệt để lỗi chữ đen bị chìm và đổi text sidebar
 st.markdown("""
     <style>
     /* Nền ứng dụng màu vũ trụ sâu thẳm */
     .stApp {
         background: linear-gradient(135deg, #0b0f19 0%, #111827 50%, #1e1b4b 100%);
-        color: #e2e8f0;
+        color: #f1f5f9 !important;
     }
     /* Thanh bên trái */
     [data-testid="stSidebar"] {
         background-color: #0f172a !important;
         border-right: 1px solid #334155;
     }
-    /* Các thẻ tiêu đề */
+    /* Sửa chữ label của các ô nhập và chữ phụ thành màu sáng */
+    label, .stCaption, p, span, div[data-testid="stMarkdownContainer"] {
+        color: #e2e8f0 !important;
+    }
+    /* Các thẻ tiêu đề màu tím tinh vân lung linh */
     h1, h2, h3 {
-        color: #c084fc !important; /* Màu tím tinh vân lung linh */
+        color: #c084fc !important; 
         text-shadow: 0 0 10px rgba(192, 132, 252, 0.4);
     }
     /* Khung Expander hướng dẫn */
     .streamlit-expanderHeader {
         background-color: #1e1b4b !important;
-        color: #cbd5e1 !important;
+        color: #f1f5f9 !important;
         border: 1px solid #4338ca !important;
         border-radius: 8px;
     }
-    /* Nút bấm lớn */
+    /* Nút bấm lớn gradient neon */
     div.stButton > button {
         background: linear-gradient(90deg, #6366f1 0%, #a855f7 100%) !important;
         color: white !important;
@@ -135,12 +139,11 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.title("🌌 Hệ Thống Phong Thủy Bát Trạch - Quy Mô Thiên Hà")
-st.caption("Ứng dụng huyền học la bàn số hóa - Tùy biến phân tích theo nhu cầu đơn lẻ")
+st.title("🌌 Hệ Thống Phong Thủy Bát Trạch")
 st.write("---")
 
 # THANH BÊN: THÔNG TIN GIA CHỦ
-st.sidebar.header("🔮 ĐĨA MỆNH GIA CHỦ")
+st.sidebar.header("🔮 CUNG MỆNH GIA CHỦ")
 col_d, col_m = st.sidebar.columns(2)
 with col_d:
     ngay_sinh = st.number_input("Ngày sinh (Dương lịch):", min_value=1, max_value=31, value=1, step=1)
@@ -200,7 +203,7 @@ st.write("---")
 if st.button("🔮 KHỞI ĐỘNG LUÂN CHUYỂN BÁT TRẠCH ĐÁNH GIÁ", use_container_width=True):
     # Kiểm tra xem người dùng có điền ít nhất 1 mục hay không
     if t_giuong is None and t_bep is None and t_ban is None and t_wc is None:
-        st.warning("🪐 Bản đồ sao trống rỗng! Vui lòng điền số độ của ít nhất một vị trí bạn muốn kiểm tra ở phía trên.")
+        st.warning("🪐 Vui lòng điền số độ của ít nhất một vị trí bạn muốn kiểm tra ở phía trên.")
     else:
         st.header("📋 KẾT QUẢ LUẬN GIẢI PHONG THỦY")
         
