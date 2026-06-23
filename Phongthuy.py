@@ -87,7 +87,7 @@ def kiem_tra_phong_thuy_chi_tiet(quai_so, vat_pham, so_do_vi_tri, so_do_huong_nh
 # --- THIẾT KẾ GIAO DIỆN WEBSITE & MÀU SẮC GALAXY TỬ VI ---
 st.set_page_config(page_title="Phong Thủy Bát Trạch Cát Tường", page_icon="🌌", layout="wide")
 
-# Inject CSS sửa triệt để lỗi chữ đen bị chìm và đổi text sidebar
+# Sửa triệt để lỗi màu chữ bị tối đen chìm vào nền sâu thẳm
 st.markdown("""
     <style>
     /* Nền ứng dụng màu vũ trụ sâu thẳm */
@@ -100,9 +100,14 @@ st.markdown("""
         background-color: #0f172a !important;
         border-right: 1px solid #334155;
     }
-    /* Sửa chữ label của các ô nhập và chữ phụ thành màu sáng */
-    label, .stCaption, p, span, div[data-testid="stMarkdownContainer"] {
-        color: #e2e8f0 !important;
+    /* Bắt buộc toàn bộ text thường, label, caption phải có màu sáng */
+    label, p, span, .stCaption, div[data-testid="stWidgetLabel"] p {
+        color: #f1f5f9 !important;
+        font-weight: 500;
+    }
+    /* Đổi màu chữ gợi ý xám nhạt bên dưới */
+    .stCaption, small {
+        color: #94a3b8 !important;
     }
     /* Các thẻ tiêu đề màu tím tinh vân lung linh */
     h1, h2, h3 {
@@ -200,7 +205,7 @@ with col2:
 st.write("---")
 
 # PHẦN HIỂN THỊ KẾT QUẢ THÔNG MINH
-if st.button("🔮 KHỞI ĐỘNG LUÂN CHUYỂN BÁT TRẠCH ĐÁNH GIÁ", use_container_width=True):
+if st.button("🔮 Bắt đầu kiểm tra phong thủy", use_container_width=True):
     # Kiểm tra xem người dùng có điền ít nhất 1 mục hay không
     if t_giuong is None and t_bep is None and t_ban is None and t_wc is None:
         st.warning("🪐 Vui lòng điền số độ của ít nhất một vị trí bạn muốn kiểm tra ở phía trên.")
