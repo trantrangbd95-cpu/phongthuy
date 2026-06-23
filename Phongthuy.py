@@ -31,7 +31,6 @@ if trang_hien_tai == "🔑 Đăng nhập / Đăng ký Tài khoản":
                 st.success('🎉 Đăng ký thành công! Bạn có thể chuyển sang tab Đăng nhập để sử dụng.')
         except Exception as e:
             st.error(f"Không thể đăng ký: {e}")
-}
 authenticator = stauth.Authenticate(config['credentials'], config['cookie']['name'], config['cookie']['key'], config['cookie']['expiry_days'])
 
 # --- 2. HÀM TÍNH TOÁN ---
